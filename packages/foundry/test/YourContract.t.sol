@@ -7,22 +7,25 @@ import "../contracts/YourContract.sol";
 contract YourContractTest is Test {
     YourContract public yourContract;
 
-    function setUp() public {
-        yourContract = new YourContract(vm.addr(1));
+    function setUp() external {
+        yourContract = new YourContract();
     }
 
-    function testMessageOnDeployment() public view {
-        require(
-            keccak256(bytes(yourContract.greeting()))
-                == keccak256("Building Unstoppable Apps!!!")
-        );
+    function testStoreNumber() public {
+        uint256 expectedFavoiteNumber = 777;
+
+        yourContract.store(expectedFavoiteNumber);
+
+        assert(expectedFavoiteNumber == yourContract.retrieve());
     }
 
-    function testSetNewMessage() public {
-        yourContract.setGreeting("Learn Scaffold-ETH 2! :)");
-        require(
-            keccak256(bytes(yourContract.greeting()))
-                == keccak256("Learn Scaffold-ETH 2! :)")
-        );
+    function testCreatePerson() public {
+        string memory name = "Juan";
+        uint256 expectedNumber = 25;
+
+        yourContract.addPerson(name, expectedNumber);
+
+        uint256 retreievedNumber = yourContract.nameToFavoriteNumber(name);
+        assert(retreievedNumber == expectedNumber);
     }
 }
